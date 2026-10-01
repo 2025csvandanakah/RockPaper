@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#101326">
+    <title>Rock Paper Scissors | The Showdown</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <main class="game-shell">
+        <header class="topbar">
+            <a class="brand" href="#" aria-label="The Showdown home">
+                <span class="brand-mark" aria-hidden="true">✦</span>
+                <span>PLAYROOM<span class="brand-period">.</span></span>
+            </a>
+            <span class="game-label"><span class="live-dot"></span> ARCADE CLASSIC</span>
+        </header>
+
+        <section class="game-card" aria-labelledby="game-title">
+            <div class="intro">
+                <p class="eyebrow">THE ULTIMATE SHOWDOWN</p>
+                <h1 id="game-title">Rock Paper<br class="mobile-break"> Scissors<span>!</span></h1>
+                <p class="subtitle">Pick how you want to play, then enjoy the game!</p>
+            </div>
+
+            <section class="setup-panel" id="setup-panel" aria-label="Enter or create a game">
+                <p class="picker-label">ENTER YOUR NAME AND ROOM ID</p>
+                <form class="lobby-form" id="lobby-form">
+                    <label class="lobby-field">
+                        <span class="picker-label">YOUR NAME</span>
+                        <input id="player-name-input" name="playerName" type="text" maxlength="24" autocomplete="nickname" placeholder="Enter your name" required>
+                    </label>
+                    <label class="lobby-field">
+                        <span class="picker-label">ROOM ID <span class="optional-label">(OPTIONAL)</span></span>
+                        <input id="room-id-input" name="roomId" type="text" pattern="[A-Fa-f0-9]{6}" maxlength="6" autocomplete="off" placeholder="Leave blank to create a game">
+                    </label>
+                    <button class="mode-button enter-game-button" id="enter-game-button" type="submit">ENTER GAME</button>
+                    <p class="lobby-hint">Enter a room ID to join a friend, or leave it blank to create a new room.</p>
+                </form>
+                <div class="other-modes">
+                    <p class="picker-label">OR PLAY A QUICK GAME</p>
+                    <div class="mode-buttons">
+                        <button class="mode-button" id="computer-mode" type="button">Play vs Computer</button>
+                        <button class="mode-button" id="local-mode" type="button">Two Players, One Device</button>
+                    </div>
+                </div>
+                <p class="setup-message" id="setup-message" role="status" aria-live="polite"></p>
+            </section>
+
+            <div class="game-screen" id="game-screen" hidden>
+            <section class="room-banner" id="room-banner" hidden>
+                <span>ROOM ID <strong id="room-id-display"></strong></span>
+                <button class="reset-button" id="copy-room-button" type="button">COPY INVITE LINK</button>
+            </section>
+            <section class="scoreboard" aria-label="Scoreboard">
+                <div class="score-player">
+                    <span class="score-label" id="left-player-label">YOU</span>
+                    <span class="score-value" id="player-score">0</span>
+                </div>
+                <div class="score-divider" aria-hidden="true">
+                    <span class="score-divider-line"></span>
+                    <span class="score-divider-text">SCORE</span>
+                    <span class="score-divider-line"></span>
+                </div>
+                <div class="score-player">
+                    <span class="score-label" id="right-player-label">COMPUTER</span>
+                    <span class="score-value" id="computer-score">0</span>
+                </div>
+            </section>
+
+            <section class="arena" aria-label="Round results">
+                <div class="fighter">
+                    <span class="fighter-name" id="left-fighter-label">YOU</span>
+                    <div class="fighter-choice" id="player-choice" aria-label="Your move">?</div>
+                </div>
+                <div class="versus" aria-hidden="true">VS</div>
+                <div class="fighter">
+                    <span class="fighter-name" id="right-fighter-label">COMPUTER</span>
+                    <div class="fighter-choice" id="computer-choice" aria-label="Computer's move">?</div>
+                </div>
+            </section>
+
+            <div class="round-message" aria-live="polite" aria-atomic="true">
+                <p class="result-title" id="result-title">Ready when you are</p>
+                <p class="result-detail" id="result-detail">Pick a move to start the game</p>
+            </div>
+
+            <section class="move-picker" aria-label="Choose your move">
+                <p class="picker-label">MAKE YOUR MOVE</p>
+                <div class="move-buttons">
+                    <button class="move-button" type="button" data-move="rock" aria-label="Choose rock">
+                        <span class="move-emoji" aria-hidden="true">✊</span>
+                        <span class="move-name">ROCK</span>
+                        <span class="move-key" aria-hidden="true">R</span>
+                    </button>
+                    <button class="move-button" type="button" data-move="paper" aria-label="Choose paper">
+                        <span class="move-emoji" aria-hidden="true">✋</span>
+                        <span class="move-name">PAPER</span>
+                        <span class="move-key" aria-hidden="true">P</span>
+                    </button>
+                    <button class="move-button" type="button" data-move="scissors" aria-label="Choose scissors">
+                        <span class="move-emoji" aria-hidden="true">✌️</span>
+                        <span class="move-name">SCISSORS</span>
+                        <span class="move-key" aria-hidden="true">S</span>
+                    </button>
+                </div>
+            </section>
+
+            <section class="simultaneous-play" id="simultaneous-play" aria-label="Simultaneous keyboard play" hidden>
+                <p class="picker-label">BOTH PLAYERS: PRESS DURING THE SAME GO WINDOW</p>
+                <div class="round-clock" aria-live="polite">
+                    <span class="clock-label" id="local-phase">GET READY</span>
+                    <span class="clock-count" id="local-countdown">3</span>
+                </div>
+                <p class="simultaneous-instructions" id="simultaneous-instructions">After the 3-second countdown, both players have 10 seconds to enter a move. Keys work only while this game page is active; buttons are available below as a backup.</p>
+                <div class="key-legend">
+                    <div class="key-player">
+                        <h2 id="local-player-one-name">PLAYER 1</h2>
+                        <p><kbd>A</kbd> Rock <kbd>S</kbd> Paper <kbd>D</kbd> Scissors</p>
+                        <span class="local-player-status" id="local-player-one-status">Ready</span>
+                        <div class="local-fallback-buttons" aria-label="Player 1 move buttons">
+                            <button type="button" data-player="0" data-move="rock" aria-label="Player 1 chooses rock">✊</button>
+                            <button type="button" data-player="0" data-move="paper" aria-label="Player 1 chooses paper">✋</button>
+                            <button type="button" data-player="0" data-move="scissors" aria-label="Player 1 chooses scissors">✌️</button>
+                        </div>
+                    </div>
+                    <div class="key-player">
+                        <h2>PLAYER 2</h2>
+                        <p><kbd>J</kbd> Rock <kbd>K</kbd> Paper <kbd>L</kbd> Scissors</p>
+                        <span class="local-player-status" id="local-player-two-status">Ready</span>
+                        <div class="local-fallback-buttons" aria-label="Player 2 move buttons">
+                            <button type="button" data-player="1" data-move="rock" aria-label="Player 2 chooses rock">✊</button>
+                            <button type="button" data-player="1" data-move="paper" aria-label="Player 2 chooses paper">✋</button>
+                            <button type="button" data-player="1" data-move="scissors" aria-label="Player 2 chooses scissors">✌️</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="game-footer">
+                <span id="round-count">ROUND 0</span>
+                <button class="reset-button" id="reset-button" type="button">
+                    <span aria-hidden="true">↻</span> RESET SCORE
+                </button>
+                <span class="keyboard-hint">PRESS R, P OR S</span>
+            </div>
+            <button class="back-button" id="back-button" type="button">BACK TO GAME MODES</button>
+            </div>
+        </section>
+
+        <footer class="page-footer">GOOD LUCK. HAVE FUN. <span>✦</span></footer>
+    </main>
+</body>
+</html>
